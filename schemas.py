@@ -21,6 +21,7 @@ class UserResponse(BaseModel):
     protein_goal: float
     carbs_goal: float
     fat_goal: float
+    water_goal_ml: float
     created_at: datetime
 
     model_config = {"from_attributes": True}
@@ -179,3 +180,56 @@ class ProgressReport(BaseModel):
     weight_change: Optional[float] = None
     current_streak: int
     longest_streak: int
+
+
+class WaterLogCreate(BaseModel):
+    amount_ml: float
+    date: date
+
+
+class WaterLogResponse(BaseModel):
+    id: int
+    amount_ml: float
+    date: date
+    created_at: datetime
+
+    model_config = {"from_attributes": True}
+
+
+class WaterDailySummary(BaseModel):
+    date: date
+    total_ml: float
+    goal_ml: float
+    remaining_ml: float
+    percent: float
+
+
+class SavedMealItemCreate(BaseModel):
+    food_id: int
+    servings: float = 1.0
+
+
+class SavedMealItemResponse(BaseModel):
+    id: int
+    food: FoodResponse
+    servings: float
+
+    model_config = {"from_attributes": True}
+
+
+class SavedMealCreate(BaseModel):
+    name: str
+    items: list[SavedMealItemCreate]
+
+
+class SavedMealResponse(BaseModel):
+    id: int
+    name: str
+    items: list[SavedMealItemResponse]
+    total_calories: float
+    total_protein: float
+    total_carbs: float
+    total_fat: float
+    created_at: datetime
+
+    model_config = {"from_attributes": True}

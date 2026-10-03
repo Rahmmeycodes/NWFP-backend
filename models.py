@@ -31,11 +31,14 @@ class User(Base):
     protein_goal = Column(Float, default=150.0)
     carbs_goal = Column(Float, default=250.0)
     fat_goal = Column(Float, default=65.0)
+    water_goal_ml = Column(Float, default=2500.0)
 
     diary_entries = relationship("DiaryEntry", back_populates="user")
     weight_logs = relationship("WeightLog", back_populates="user")
     custom_foods = relationship("Food", back_populates="created_by_user")
     exercises = relationship("Exercise", back_populates="user")
+    water_logs = relationship("WaterLog", back_populates="user")
+    saved_meals = relationship("SavedMeal", back_populates="user")
 
 
 class Food(Base):
@@ -99,3 +102,39 @@ class Exercise(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
 
     user = relationship("User", back_populates="exercises")
+
+
+class WaterLog(Base):
+    __tablename__ = "water_logs"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    amount_ml = Column(Float, nullable=False)
+    date = Column(Date, nullable=False, default=date.today)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    user = relationship("User", back_populates="water_logs")
+
+
+class SavedMeal(Base):
+    __tablename__ = "saved_meals"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    name = Column(String, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    user = relationship("User", back_populates="saved_meals")
+    items = relationship("SavedMealItem", back_populates="meal", cascade="all, delete-orphan")
+
+
+class SavedMealItem(Base):
+    __tablename__ = "saved_meal_items"
+
+    id = Column(Integer, primary_key=True, index=True)
+    meal_id = Column(Integer, ForeignKey("saved_meals.id"), nullable=False)
+    food_id = Column(Integer, ForeignKey("foods.id"), nullable=False)
+    servings = Column(Float, nullable=False, default=1.0)
+
+    meal = relationship("SavedMeal", back_populates="items")
+    food = relationship("Food")
