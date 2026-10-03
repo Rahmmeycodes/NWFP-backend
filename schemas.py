@@ -13,6 +13,10 @@ class UserResponse(BaseModel):
     id: int
     email: str
     username: str
+    height_cm: Optional[float] = None
+    age: Optional[int] = None
+    gender: Optional[str] = None
+    activity_level: Optional[str] = None
     calorie_goal: int
     protein_goal: float
     carbs_goal: float
@@ -20,6 +24,13 @@ class UserResponse(BaseModel):
     created_at: datetime
 
     model_config = {"from_attributes": True}
+
+
+class ProfileUpdate(BaseModel):
+    height_cm: Optional[float] = None
+    age: Optional[int] = None
+    gender: Optional[str] = None
+    activity_level: Optional[str] = None
 
 
 class UserLogin(BaseModel):
@@ -115,3 +126,56 @@ class WeightLogResponse(BaseModel):
     created_at: datetime
 
     model_config = {"from_attributes": True}
+
+
+class ExerciseCreate(BaseModel):
+    name: str
+    category: str = "cardio"
+    duration_minutes: int
+    calories_burned: float
+    date: date
+
+
+class ExerciseResponse(BaseModel):
+    id: int
+    name: str
+    category: str
+    duration_minutes: int
+    calories_burned: float
+    date: date
+    created_at: datetime
+
+    model_config = {"from_attributes": True}
+
+
+class StreakResponse(BaseModel):
+    current_streak: int
+    longest_streak: int
+    total_logged_days: int
+    last_logged_date: Optional[date] = None
+
+
+class DailyReport(BaseModel):
+    date: date
+    calories_consumed: float
+    calories_burned: float
+    net_calories: float
+    protein: float
+    carbs: float
+    fat: float
+    exercise_minutes: int
+
+
+class ProgressReport(BaseModel):
+    period_start: date
+    period_end: date
+    days: list[DailyReport]
+    avg_daily_calories: float
+    avg_daily_protein: float
+    avg_daily_carbs: float
+    avg_daily_fat: float
+    total_exercise_minutes: int
+    total_calories_burned: float
+    weight_change: Optional[float] = None
+    current_streak: int
+    longest_streak: int

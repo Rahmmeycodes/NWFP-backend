@@ -8,6 +8,9 @@ from routes.diary_routes import router as diary_router
 from routes.weight_routes import router as weight_router
 from routes.scanner_routes import router as scanner_router
 from routes.image_scanner_routes import router as image_scanner_router
+from routes.exercise_routes import router as exercise_router
+from routes.profile_routes import router as profile_router
+from routes.progress_routes import router as progress_router
 
 Base.metadata.create_all(bind=engine)
 
@@ -27,6 +30,9 @@ app.include_router(diary_router)
 app.include_router(weight_router)
 app.include_router(scanner_router)
 app.include_router(image_scanner_router)
+app.include_router(exercise_router)
+app.include_router(profile_router)
+app.include_router(progress_router)
 
 
 @app.get("/")

@@ -22,6 +22,11 @@ class User(Base):
     hashed_password = Column(String, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
 
+    height_cm = Column(Float, nullable=True)
+    age = Column(Integer, nullable=True)
+    gender = Column(String, nullable=True)
+    activity_level = Column(String, default="moderate")
+
     calorie_goal = Column(Integer, default=2000)
     protein_goal = Column(Float, default=150.0)
     carbs_goal = Column(Float, default=250.0)
@@ -30,6 +35,7 @@ class User(Base):
     diary_entries = relationship("DiaryEntry", back_populates="user")
     weight_logs = relationship("WeightLog", back_populates="user")
     custom_foods = relationship("Food", back_populates="created_by_user")
+    exercises = relationship("Exercise", back_populates="user")
 
 
 class Food(Base):
@@ -78,3 +84,18 @@ class WeightLog(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
 
     user = relationship("User", back_populates="weight_logs")
+
+
+class Exercise(Base):
+    __tablename__ = "exercises"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    name = Column(String, nullable=False)
+    category = Column(String, default="cardio")
+    duration_minutes = Column(Integer, nullable=False)
+    calories_burned = Column(Float, nullable=False)
+    date = Column(Date, nullable=False, default=date.today)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    user = relationship("User", back_populates="exercises")
